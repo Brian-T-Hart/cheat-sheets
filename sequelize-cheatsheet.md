@@ -7,62 +7,63 @@ Sequelize provides utilities for generating migrations, models, and seed files. 
 ### Init Project
 
 ```bash
-$ npx sequelize-cli init
+npx sequelize-cli init
 ```
+
 You must create a database user, and update the `config/config.json` file to match your database settings to complete the initialization process.
 
 ### Create Database
 
 ```bash
-$ npx sequelize-cli db:create
+npx sequelize-cli db:create
 ```
 
 ### Generate a model and its migration
 
 ```bash
-$ npx sequelize-cli model:generate --name <ModelName> --attributes <column1>:<type>,<column2>:<type>,...
+npx sequelize-cli model:generate --name <ModelName> --attributes <column1>:<type>,<column2>:<type>,...
 ```
 
 ### Run pending migrations
 
 ```bash
-$ npx sequelize-cli db:migrate
+npx sequelize-cli db:migrate
 ```
 
 ### Rollback one migration
 
 ```bash
-$ npx sequelize-cli db:migrate:undo
+npx sequelize-cli db:migrate:undo
 ```
 
 ### Rollback all migrations
 
 ```bash
-$ npx sequelize-cli db:migrate:undo:all
+npx sequelize-cli db:migrate:undo:all
 ```
 
 ### Generate a new seed file
 
 ```bash
-$ npx sequelize-cli seed:generate --name <descriptiveName>
+npx sequelize-cli seed:generate --name <descriptiveName>
 ```
 
 ### Run all pending seeds
 
 ```bash
-$ npx sequelize-cli db:seed:all
+npx sequelize-cli db:seed:all
 ```
 
 ### Rollback one seed
 
 ```bash
-$ npx sequelize-cli db:seed:undo
+npx sequelize-cli db:seed:undo
 ```
 
 ### Rollback all seeds
 
 ```bash
-$ npx sequelize-cli db:seed:undo:all
+npx sequelize-cli db:seed:undo:all
 ```
 
 ## Migrations
@@ -163,9 +164,7 @@ $ npx sequelize-cli db:seed:undo:all
 });
 ```
 
-
 ### findByPk
-
 
 ```js
 <Model>.findByPk(<primary_key>, {
@@ -205,4 +204,3 @@ const Op = Sequelize.Op
 [Op.notIRegexp]: '^[h|a|t]' // !~* '^[h|a|t]' (PG only)
 [Op.like]: { [Op.any]: ['cat', 'hat']}
 ```
-

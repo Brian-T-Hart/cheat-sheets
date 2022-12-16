@@ -1,49 +1,58 @@
 # Node-React App
 
-### Create app directory and cd into it
-```
+## Create app directory and cd into it
+
+```bash
 mkdir <appName>
 cd <appName>
 ```
 
-### Create Express Backend
-```
+## Create Express Backend
+
+```bash
 npx express-generator --no-view
 npm install
 ```
 
-### Update Server Port to 3001 in bin/www
-```
+## Update Server Port to 3001 in bin/www
+
+```bash
 var port = normalizePort(process.env.PORT || '3001');
 ```
 
-### Install Concurrently
-```
+## Install Concurrently
+
+```bash
 npm i concurrently
 ```
 
-### Update Start Script
-```
+## Update Start Script
+
+```bash
 "start": "concurrently \"node ./bin/www\" \"cd client && npm start\""
 ```
 
-### Install MySQL
-```
+## Install MySQL
+
+```bash
 npm i mysql2
 ```
 
-### Install Sequelize
-```
+## Install Sequelize
+
+```bash
 npm i sequelize
 ```
 
-### Initialize Sequelize
-```
+## Initialize Sequelize
+
+```bash
 npx sequelize-cli init
 ```
 
-### Update config/config.json with db credentials
-```
+## Update config/config.json with db credentials
+
+```json
 "development": {
     "username": "root",
     "password": "root",
@@ -53,35 +62,42 @@ npx sequelize-cli init
 }
 ```
 
-### Create Database
-```
+## Create Database
+
+```bash
 npx sequelize-cli db:create
 ```
 
 ***
 
-### Create React Frontend
-```
+## Create React Frontend
+
+```bash
 npx create-react-app client
 ```
 
-### Add proxy to client/package.json
-```
+## Add proxy to client/package.json
+
+```json
 "proxy": "http://localhost:3001",
 ```
 
-### Test Connection
+## Test Connection
+
 Add the following to client/src/app.js
-```
+
+```js
 fetch('/users')
 .then(response => response.text())
 .then(data => console.log({data}));
 ```
 
 ***
+
 ## Extras
-### Start server in debug mode
-```
+
+## Start server in debug mode
+
+```bash
 DEBUG=express:* node ./bin/www
 ```
-
