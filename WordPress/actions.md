@@ -26,14 +26,3 @@ add_action( 'init', 'my_callback_function', 11, 2);
 // params are passed when do action is called
 do_action('init', 'param 1', 'param 2');
 ```
-
-## Filters
-
-Example:
-
-```php
-function my_callback_function() {
-    // do something here
-}
-add_action( 'init', 'my_callback_function' );
-```
