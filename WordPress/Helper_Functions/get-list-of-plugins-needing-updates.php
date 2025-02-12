@@ -9,6 +9,10 @@ add_action("wp_ajax_get_list_of_plugins_needing_updates", "get_list_of_plugins_n
 function get_list_of_plugins_needing_updates()
 {
 
+  if (!current_user_can('manage_options')) {
+    wp_send_json_error("You do not have permission to access this page");
+  }
+
   if (!function_exists('get_plugin_updates')) {
     include_once(ABSPATH . 'wp-admin/includes/update.php');
   }
@@ -16,7 +20,8 @@ function get_list_of_plugins_needing_updates()
   $plugin_updates = get_plugin_updates();
 
   if (empty($plugin_updates)) {
-    return "All plugins are up to date";
+    echo "All plugins are up to date";
+    wp_die();
   }
 
   $plugin_info = "";
