@@ -26,11 +26,14 @@ add_filter('manage_users_sortable_columns', 'custom_make_user_registration_colum
 
 // Modify the query to apply sorting
 function custom_orderby_user_registration_date($query) {
-    if (!is_admin() || $query->get('orderby') !== 'user_registered') {
+    if (!is_admin() || !$query->get('orderby')) {
         return;
     }
-    
-    $query->set('orderby', 'user_registered'); // Sort by registration date
-    $query->set('order', 'DESC'); // Default to newest first
+
+    if ($query->get('orderby') === 'user_registered') {
+        $order = strtoupper($query->get('order')) === 'ASC' ? 'ASC' : 'DESC'; // Ensure only ASC or DESC
+        $query->set('orderby', 'user_registered');
+        $query->set('order', $order);
+    }
 }
 add_action('pre_get_users', 'custom_orderby_user_registration_date');
