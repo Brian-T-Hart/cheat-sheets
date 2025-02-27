@@ -1,0 +1,29 @@
+.container-with-bg-slider {
+    background-image: url('path-to-image-1');
+    background-size: cover;
+    background-position: center;
+    animation: customBgSlider 25s infinite;
+}
+
+.container-with-bg-slider.paused {
+    animation-play-state: paused;
+}
+
+/* Keyframes for fading between images */
+@keyframes customBgSlider {
+    0%, 100% {
+        background-image: url('path-to-image-1');
+    }
+    20% {
+        background-image: url('path-to-image-2');
+    }
+    40% {
+        background-image: url('path-to-image-3');
+    }
+    60% {
+        background-image: url('path-to-image-4');
+    }
+    80% {
+        background-image: url('path-to-image-5');
+    }
+}
