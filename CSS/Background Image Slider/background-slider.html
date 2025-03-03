@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Fade Without Fading Text</title>
+    <style>
+        body {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, Helvetica, sans-serif;
+            height: 100vh;
+            justify-content: flex-start;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .bg-slider {
+            align-items: center;
+            animation: backgroundFade 12s ease-in-out infinite;
+            background-size: cover;
+            background-position: center;
+            border-radius: 25px;
+            color: white;
+            display: flex;
+            font-size: 24px;
+            font-weight: bold;
+            height: 400px;
+            justify-content: center;
+            overflow: hidden;
+            text-align: center;
+            width: 600px;
+        }
+
+        .bg-slider.paused {
+            animation-play-state: paused;
+        }
+
+        .bg-slider-text {
+            align-items: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25));
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center;
+            width: 100%;
+        }
+
+        h2 {
+            margin: 0;
+        }
+
+        /* Keyframes for fading between images */
+        @keyframes backgroundFade {
+
+            0%,
+            25% {
+                background-image: url('path-to-image-1');
+            }
+
+            33%,
+            58% {
+                background-image: url('path-to-image-2');
+            }
+
+            66%,
+            91% {
+                background-image: url('path-to-image-3');
+            }
+
+            100% {
+                background-image: url('path-to-image-1');
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-slider paused">
+        <div class="bg-slider-text">
+            <h2>Background Image Slider</h2>
+            <p>Made with CSS Animation</p>
+        </div>
+    </div>
+
+    <script>
+        // Preload images before starting the animation
+        const bgSlider = document.querySelector('.bg-slider');
+
+        const images = [
+            'path-to-image-1',
+            'path-to-image-2',
+            'path-to-image-3'
+        ];
+
+        function preloadImages(imageArray) {
+            let loadedImages = 0;
+            const totalImages = imageArray.length;
+
+            imageArray.forEach(src => {
+                const img = new Image();
+                img.src = src;
+                img.onload = () => {
+                    loadedImages++;
+                    if (loadedImages === totalImages) {
+                        bgSlider.classList.toggle('paused');
+                    }
+                };
+            });
+        }
+
+        preloadImages(images);
+
+        bgSlider.addEventListener('click', () => {
+            console.log('slider paused');
+            bgSlider.classList.toggle('paused');
+        });
+    </script>
+
+</body>
+
+</html>
