@@ -16,3 +16,17 @@ function custom_login_logo() {
   </style>';
 }
 add_action('login_enqueue_scripts', 'custom_login_logo');
+
+/**
+ * Link the logo to the site URL instead of WordPress.org
+ */
+function custom_login_url( $url ) {
+	$siteUrl = get_bloginfo( 'url' );
+
+  if (empty($siteUrl)) {
+    return $url;
+  }
+
+  return $siteUrl;
+}
+add_filter( 'login_headerurl', 'custom_login_url', 10, 1 );
