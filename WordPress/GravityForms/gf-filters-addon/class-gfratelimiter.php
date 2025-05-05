@@ -12,7 +12,7 @@
 class GF_RateLimiter
 {
     private static $limit_count = 1; // Number of allowed submissions
-    private static $throttle_time = 3; // Time period for the throttle in seconds
+    private static $throttle_time = 10; // Time period for the throttle in seconds
     private static $wait_time = 30; // Time period for the limit in seconds
     private static $max_wait_time = 3600; // Maximum wait time in seconds
 
@@ -119,7 +119,7 @@ class GF_RateLimiter
             GFFormsModel::add_note(
                 $entry['id'],
                 0, // 0 = system note
-                'Anti-Spam Add-On',
+                'GF Filters Add-On',
                 sanitize_text_field($_POST['gf_rate_limit_spam_reason'])
             );
         }

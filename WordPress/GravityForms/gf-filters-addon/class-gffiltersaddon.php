@@ -28,19 +28,23 @@ class GFFiltersAddOn extends GFAddOn
     {
         parent::init();
 
-        $is_enabled = $this->get_plugin_setting('enabled');
-
-        if ($is_enabled) {
+        if ($this->get_plugin_setting('enabled')) {
             add_filter('gform_field_validation', array($this, 'custom_field_validation'), 10, 4);
+            
+            if ($this->get_plugin_setting('rate_limiting_enabled')) {
+                include_once('class-gfratelimiter.php');
+                GF_RateLimiter::init();
+            }
         }
     }
 
     /**
      * Replace default icon with custom SVG icon.
      */
-    public function get_menu_icon() {
+    public function get_menu_icon()
+    {
         return '<svg style="height: 28px; width: 37px; max-width: 37px" width="1358" height="1056" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M3.9 54.9C10.5 40.9 24.5 32 40 32l432 0c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9 320 448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6l0-79.1L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z"/></svg>';
-	}
+    }
 
     // public function init()
     // {
@@ -77,8 +81,8 @@ class GFFiltersAddOn extends GFAddOn
                     array(
                         'name'    => 'enabled',
                         'type'    => 'checkbox',
-                        'label'   => esc_html__('Activate GF Filters', 'filtersaddon'),
-                        'tooltip' => esc_html__('Check the box to activate the filters.', 'filtersaddon'),
+                        'label'   => esc_html__('Activate the GF Filters Addon', 'filtersaddon'),
+                        'tooltip' => esc_html__('Check the box to activate this GF Filters Addon.', 'filtersaddon'),
                         'choices' => array(
                             array(
                                 'name'  => 'enabled',
@@ -99,6 +103,18 @@ class GFFiltersAddOn extends GFAddOn
                         ),
                     ),
                     array(
+                        'name'    => 'character_validation_enabled',
+                        'type'    => 'checkbox',
+                        'label'   => esc_html__('Character Validation', 'filtersaddon'),
+                        'tooltip' => esc_html__('Check the box to activate character validation. This will mark fields as invalid and stop form submission if they contain Greek, Cyrillic or other invalid characters.', 'filtersaddon'),
+                        'choices' => array(
+                            array(
+                                'name'  => 'character_validation_enabled',
+                                'label' => esc_html__('Activate Character Validation (Greek, Cyrillic, etc)', 'filtersaddon'),
+                            ),
+                        ),
+                    ),
+                    array(
                         'name'    => 'blocked_text',
                         'type'    => 'textarea',
                         'label'   => esc_html__('Blocked Text', 'filtersaddon'),
@@ -113,6 +129,23 @@ class GFFiltersAddOn extends GFAddOn
                         'description' => esc_html__('Enter full or partial email addresses below (One per line)', 'filtersaddon'),
                         'tooltip' => esc_html__('Enter full or partial email addresses below (One per line)', 'filtersaddon'),
                         'class'   => 'medium',
+                    ),
+                ),
+            ),
+            array(
+                'title'  => esc_html__('Rate Limiting', 'filtersaddon'),
+                'fields' => array(
+                    array(
+                        'name'    => 'rate_limiting_enabled',
+                        'type'    => 'checkbox',
+                        'label'   => esc_html__('Enable Rate Limiting', 'filtersaddon'),
+                        'tooltip' => esc_html__('Check the box to activate rate limiting.', 'filtersaddon'),
+                        'choices' => array(
+                            array(
+                                'name'  => 'rate_limiting_enabled',
+                                'label' => esc_html__('Enabled', 'filtersaddon'),
+                            ),
+                        ),
                     ),
                 ),
             ),
@@ -168,16 +201,13 @@ class GFFiltersAddOn extends GFAddOn
         switch ($field->type) {
             case 'text':
             case 'textarea':
-
-                // Run Cyrillic & Greek check.
-                $cyrillic = preg_match('/[\p{Cyrillic}]/u', $value);
-                $greek = preg_match('/[\p{Greek}]/u', $value);
-
-                if ($cyrillic || $greek) {
-                    GFCommon::log_debug(__METHOD__ . '(): Cyrillic or Greek detected!');
-                    $result['is_valid'] = false;
-                    $result['message'] = 'Sorry, there is a problem with your message. Please try again.';
-                    break;
+                if ($this->get_plugin_setting('character_validation_enabled')) {
+                    if ($this->validate_characters($value) === false) {
+                        GFCommon::log_debug(__METHOD__ . '(): Cyrillic, Greek or other invalid characters detected!');
+                        $result['is_valid'] = false;
+                        $result['message'] = 'Sorry, there is a problem with your message. Please try again.';
+                        break;
+                    }
                 }
 
                 // Run Stop Words check.
@@ -219,7 +249,7 @@ class GFFiltersAddOn extends GFAddOn
                 } else {
                     $custom_stop_words_array = array();
                 }
-                
+
                 $lower_value = strtolower(trim($value));
                 $stop_words_detected = 0;
 
@@ -244,5 +274,21 @@ class GFFiltersAddOn extends GFAddOn
         }
 
         return $result;
+    }
+
+    /**
+     * * Validate characters in the field value.
+     * * This function checks for Cyrillic and Greek characters in the input value.
+     */
+    public function validate_characters($value)
+    {
+        $cyrillic   = preg_match('/[\p{Cyrillic}]/u', $value); // Cyrillic characters
+        $arabic     = preg_match('/[\p{Arabic}]/u', $value); // Arabic characters
+        $greek      = preg_match('/[\p{Greek}]/u', $value); // Greek characters
+        $han        = preg_match('/[\p{Han}]/u', $value); // Han characters (Chinese, Japanese, Korean)
+        $hebrew     = preg_match('/[\p{Hebrew}]/u', $value); // Hebrew characters
+        $Zalgo      = preg_match('/(?:\p{Mn}){3,}/u', $value); // Zalgo text (excessive combining marks)
+
+        return !$cyrillic && !$greek && !$han && !$hebrew && !$arabic && !$Zalgo;
     }
 }
