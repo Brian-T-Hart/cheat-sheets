@@ -1,0 +1,39 @@
+<!-- Add to head on all pages to check for and/or set cookie -->
+<script>
+    (function () {
+        var name = "ab_test_variant";
+        var existing = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        if (!existing) {
+            var variant = Math.random() < 0.5 ? 'A' : 'B';
+            document.cookie = name + "=" + variant + "; path=/; max-age=" + (60 * 60 * 24 * 30);
+        }
+    })();
+</script>
+
+<!-- Update element text per variant -->
+<script>
+    function ab_test_variant_text(selector, A, B) {
+        if (!selector || !A || !B) {
+            console.error(new Error('Missing required parameters for set_up_ab_test'));
+            return;
+        }
+        
+        const name = "ab_test_variant";
+        let variant = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+
+        if (!variant) return;
+        variant = variant[2];
+
+        const el = document.querySelector(selector);
+        if (!el) return;
+
+        if (variant === 'A') {
+            // Variant A button settings
+            el.textContent = A;
+        } else {
+            // Variant B button settings
+            el.textContent = B;
+        }
+    }// set_up_ab_test
+    ab_test_variant_text('a.apply-now', 'Apply Now', 'Buy a Home');
+</script>
