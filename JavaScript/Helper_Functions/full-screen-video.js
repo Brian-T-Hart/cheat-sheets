@@ -1,9 +1,18 @@
-function playFullScreenVideo(videoSelector, toggleSelector) {
-    const video = document.querySelector(videoSelector);
-    const fullscreenToggle = document.querySelector(toggleSelector);
+/**
+ * Adds a click listener to an element that opens and plays a video in fullscreen
+ * @param {HTMLElement} video
+ * @param {HTMLElement} toggle
+ * @returns
+ */
+function playFullScreenVideo(video, toggle) {
+    
+    // Add console warning if either argument is not an html element
+    if (!(video instanceof HTMLElement) || !(toggle instanceof HTMLElement)) {
+        console.error("playFullScreenVideo: one or both arguments are not HTMLElements");
+        return;
+    }
 
-    if (!video || !fullscreenToggle) return;
-
+    // Pause video when exiting fullscreen
     video.addEventListener('fullscreenchange', (event) => {
         if (!document.fullscreenElement) {
             video.pause();
@@ -12,7 +21,8 @@ function playFullScreenVideo(videoSelector, toggleSelector) {
         false
     );
 
-    fullscreenToggle.addEventListener('click', () => {
+    // Toggle fullscreen and play/pause video on button click
+    toggle.addEventListener('click', () => {
         if (!document.fullscreenElement) {
             if (video.requestFullscreen) {
                 video.requestFullscreen();
@@ -46,4 +56,6 @@ function playFullScreenVideo(videoSelector, toggleSelector) {
     });
 }
 
-playFullScreenVideo("myVideo", "myButton");
+const videoEl = document.querySelector('#myVideo');
+const toggleEl = document.querySelector('#myBtn');
+playFullScreenVideo(videoEl, toggleEl);
