@@ -1,4 +1,11 @@
-
+/**
+ * Try to execute a function, and if it fails, try again after a delay.
+ * Use exponential backoff to increase the delay between attempts.
+ * @param {Function} attempting 
+ * @param {Number} attempts 
+ * @param {Number} delay 
+ * @returns 
+ */
 function try_try_again(attempting, attempts = 3, delay = 250) {
     if (attempts > 0) {
         console.log(`Remaining attempts: ${attempts}`);
