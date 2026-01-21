@@ -1,0 +1,26 @@
+<script>
+  (function () {
+    window.dataLayer = window.dataLayer || [];
+    var interactionFired = false;
+
+    function fireInteraction() {
+      if (!interactionFired) {
+        interactionFired = true;
+        dataLayer.push({ event: 'user_interaction' });
+
+        // Remove all listeners after firing
+        window.removeEventListener('scroll', fireInteraction, { passive: true });
+        document.body.removeEventListener('mouseenter', fireInteraction);
+        document.removeEventListener('click', fireInteraction);
+        document.removeEventListener('touchstart', fireInteraction, { passive: true });
+        document.removeEventListener('touchmove', fireInteraction, { passive: true });
+      }
+    }
+
+    window.addEventListener('scroll', fireInteraction, { passive: true });
+    document.body.addEventListener('mouseenter', fireInteraction);
+    document.addEventListener('click', fireInteraction);
+    document.addEventListener('touchstart', fireInteraction, { passive: true });
+    document.addEventListener('touchmove', fireInteraction, { passive: true });
+  })();
+</script>
