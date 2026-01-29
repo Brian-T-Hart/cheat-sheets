@@ -3,22 +3,32 @@
     window.dataLayer = window.dataLayer || [];
     var interactionFired = false;
 
+    // If thank you page, fire event immediately
+    if (window.location.pathname.includes('thank')) {
+      interactionFired = true;
+      window.dataLayer.push({ event: 'user_interaction' });
+      return;
+    }
+
     function fireInteraction() {
       if (!interactionFired) {
         interactionFired = true;
-        dataLayer.push({ event: 'user_interaction' });
+        window.dataLayer.push({ event: 'user_interaction' });
 
         // Remove all listeners after firing
-        window.removeEventListener('scroll', fireInteraction, { passive: true });
-        document.body.removeEventListener('mouseenter', fireInteraction);
-        document.removeEventListener('click', fireInteraction);
-        document.removeEventListener('touchstart', fireInteraction, { passive: true });
+        document.documentElement.removeEventListener('click', fireInteraction);
+        document.documentElement.removeEventListener('mouseenter', fireInteraction);
+        document.documentElement.removeEventListener('keydown', fireInteraction);
+        document.documentElement.removeEventListener('scroll', fireInteraction, { passive: true });
+        document.documentElement.removeEventListener('touchstart', fireInteraction, { passive: true });
       }
-    }
+    }// fireInteraction
 
-    window.addEventListener('scroll', fireInteraction, { passive: true });
-    document.body.addEventListener('mouseenter', fireInteraction);
-    document.addEventListener('click', fireInteraction);
-    document.addEventListener('touchstart', fireInteraction, { passive: true });
+    // Set up event listeners
+    document.documentElement.addEventListener('click', fireInteraction);
+    document.documentElement.addEventListener('mouseenter', fireInteraction);
+    document.documentElement.addEventListener('keydown', fireInteraction);
+    document.documentElement.addEventListener('scroll', fireInteraction, { passive: true });
+    document.documentElement.addEventListener('touchstart', fireInteraction, { passive: true });
   })();
 </script>
