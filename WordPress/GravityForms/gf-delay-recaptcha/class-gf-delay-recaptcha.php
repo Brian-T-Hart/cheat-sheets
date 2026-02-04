@@ -18,21 +18,6 @@ class GFDelayReCaptcha
     }
 
     /**
-     * Remove the reCAPTCHA script src to delay its loading
-     */
-    public static function remove_recaptcha_src($src, $handle)
-    {
-        if ($handle === 'gform_recaptcha') {
-            self::$src = $src;
-            GFCommon::log_debug(__METHOD__ . "(): Script src = {self::$src}.");
-
-            $src = "";
-        }
-
-        return $src;
-    }
-
-    /**
      * Enqueue the custom reCAPTCHA delay script
      */
     public static function enqueue_recaptcha_delay_script($form, $is_ajax)
@@ -61,6 +46,22 @@ class GFDelayReCaptcha
 
         GFCommon::log_debug(__METHOD__ . "(): Enqueued script for form ID {$form_id}.");
     } // enqueue_recaptcha_delay_script
+
+    /**
+     * Remove the reCAPTCHA script src to delay its loading
+     */
+    public static function remove_recaptcha_src($src, $handle)
+    {
+        if ($handle === 'gform_recaptcha') {
+            self::$src = $src;
+            
+            GFCommon::log_debug(__METHOD__ . "(): Script src = {self::$src}.");
+
+            $src = "";
+        }
+
+        return $src;
+    }
 }
 
 GFDelayReCaptcha::init();

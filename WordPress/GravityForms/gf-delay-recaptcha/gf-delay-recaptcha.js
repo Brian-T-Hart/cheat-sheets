@@ -1,8 +1,5 @@
 (function () {
-    console.log('gf-delay-recaptcha.js loaded');
-
     if (typeof loadRecaptcha !== 'function') {
-        console.log('Defining loadRecaptcha function');
 
         function loadRecaptcha() {
             if (window.gfRecaptchaLoaded) return;
@@ -17,10 +14,11 @@
 
         function getRecaptchaScriptSrc() {
             var recaptchaSrc = 'https://www.recaptcha.net/recaptcha/api.js?render=explicit';
+
             if (typeof GFDelayReCaptchaData !== 'undefined' && GFDelayReCaptchaData.recaptchaSrc) {
                 recaptchaSrc = GFDelayReCaptchaData.recaptchaSrc;
-                console.log('Using localized recaptchaSrc:', recaptchaSrc);
             }
+
             return recaptchaSrc;
         }// getRecaptchaScriptSrc
 
