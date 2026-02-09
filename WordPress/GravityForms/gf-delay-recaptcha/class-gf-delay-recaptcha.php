@@ -4,7 +4,6 @@
  * Gravity Forms – Custom reCAPTCHA Delay
  * Requires Gravity Forms 2.9+
  */
-
 class GFDelayReCaptcha
 {
     private static $src = '';
@@ -62,6 +61,6 @@ class GFDelayReCaptcha
 
         return $src;
     }
-}
+}// GFDelayReCaptcha
 
 GFDelayReCaptcha::init();

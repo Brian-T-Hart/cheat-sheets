@@ -1,6 +1,8 @@
 (function () {
+    // Prevent multiple loads of the ReCAPTCHA script
     if (typeof loadRecaptcha !== 'function') {
 
+        // Add ReCAPTCHA script to the page
         function loadRecaptcha() {
             if (window.gfRecaptchaLoaded) return;
             window.gfRecaptchaLoaded = true;
@@ -12,6 +14,7 @@
             document.body.appendChild(s);
         }// loadRecaptcha
 
+        // Returns the ReCAPTCHA script source
         function getRecaptchaScriptSrc() {
             var recaptchaSrc = 'https://www.recaptcha.net/recaptcha/api.js?render=explicit';
 
