@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Force trailing slash on links
- * Ensures that all internal links are output with a trailing slash
+ * Ensure all internal links are output with a trailing slash
  */
 function aopp_force_trailing_slash_on_internal_urls( $url, $type ) {
     if ( is_admin() ) {
@@ -21,5 +20,4 @@ function aopp_force_trailing_slash_on_internal_urls( $url, $type ) {
 
     return trailingslashit( $url );
 }
-
 add_filter('user_trailingslashit', 'aopp_force_trailing_slash_on_internal_urls', 10, 2);

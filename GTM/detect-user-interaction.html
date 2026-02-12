@@ -2,18 +2,19 @@
   (function () {
     window.dataLayer = window.dataLayer || [];
     var interactionFired = false;
+    var interactionEvent = 'user_interaction';
 
     // If thank you page, fire event immediately
     if (window.location.pathname.includes('thank')) {
       interactionFired = true;
-      window.dataLayer.push({ event: 'user_interaction' });
+      window.dataLayer.push({ event: interactionEvent });
       return;
     }
 
     function fireInteraction() {
       if (!interactionFired) {
         interactionFired = true;
-        window.dataLayer.push({ event: 'user_interaction' });
+        window.dataLayer.push({ event: interactionEvent });
 
         // Remove all listeners after firing
         document.documentElement.removeEventListener('click', fireInteraction);
