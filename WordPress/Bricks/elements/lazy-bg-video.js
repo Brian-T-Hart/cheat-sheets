@@ -1,5 +1,5 @@
 (function () {
-    const videoElementSelector = '.brxe-custom-video';
+    const videoElementSelector = '.brxe-lazy-bg-video';
     let customLazyVideosLoaded = false;
 
     function custom_load_lazy_videos() {

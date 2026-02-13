@@ -5,13 +5,13 @@ if (! class_exists('\Bricks\Elements')) exit; // Exit if Bricks is not active
 class Custom_Video_Element extends \Bricks\Element
 {
     public $category     = 'media';
-    public $name         = 'custom-video';
+    public $name         = 'lazy-bg-video';
     public $icon         = 'ti-video-clapper';
-    public $css_selector = '.brxe-custom-video';
+    public $css_selector = '.brxe-lazy-bg-video';
 
     public function get_label()
     {
-        return esc_html__('Custom Video', 'bricks');
+        return esc_html__('BG Video', 'bricks');
     }
 
     public function set_controls()
