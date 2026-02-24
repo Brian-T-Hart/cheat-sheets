@@ -33,10 +33,17 @@
     }
 
     // Helper function to create source element based on video URL
-    function createSourceElement(src) {
+    function createSourceElement(src, breakpoint = 768, isDesktop = true) {
         const sourceEl = document.createElement('source');
         sourceEl.src = src;
         sourceEl.type = getVideoType(src);
+
+        if (!isDesktop) {
+            sourceEl.media = `(max-width: ${breakpoint}px)`;
+        } else {
+            sourceEl.media = `(min-width: ${breakpoint + 1}px)`;
+        }
+
         return sourceEl;
     }
 
@@ -73,15 +80,25 @@
             if (video.querySelector('source')) return;
 
             // If video has data-src attribute, create a source element and append to video
-            const src = video.dataset.src;
-            if (src && typeof src === "string" && src.trim() !== "") {
-                const sourceEl = createSourceElement(src);
+            const desktopSrc = video.dataset.srcDesktop;
+            const mobileSrc = video.dataset.srcMobile;
+            const breakpoint = parseInt(video.dataset.breakpoint) || 768;
+
+            // create two source elements for desktop and mobile if both URLs are provided
+            if (desktopSrc && typeof desktopSrc === "string" && desktopSrc.trim() !== "") {
+                const sourceEl = createSourceElement(desktopSrc, breakpoint, true);
                 video.appendChild(sourceEl);
+            }
+
+            if (mobileSrc && typeof mobileSrc === "string" && mobileSrc.trim() !== "") {
+                const sourceEl = createSourceElement(mobileSrc, breakpoint, false);
+                video.appendChild(sourceEl);
+            }
+
+            if (video.querySelectorAll('source').length > 0) {
                 video.load();
                 handleVideoClick(video);
                 video.classList.add('loaded');
-            } else {
-                console.warn('No valid data-src found for video:', video);
             }
         });
     }

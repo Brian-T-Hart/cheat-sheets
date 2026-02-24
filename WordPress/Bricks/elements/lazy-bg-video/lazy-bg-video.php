@@ -16,11 +16,20 @@ class Custom_Video_Element extends \Bricks\Element
 
     public function set_controls()
     {
-        $this->controls['video_url'] = [
+        $this->controls['video_url_desktop'] = [
             'tab'   => 'content',
-            'label' => esc_html__('Video URL', 'bricks'),
+            'label' => esc_html__('Desktop Video URL', 'bricks'),
             'type'  => 'text',
             'placeholder' => 'https://example.com/video.mp4',
+            'description' => esc_html__('Enter the URL of the video to be displayed on desktop. If left empty, no video will display.', 'bricks'),
+        ];
+
+        $this->controls['video_url_mobile'] = [
+            'tab'   => 'content',
+            'label' => esc_html__('Mobile Video URL', 'bricks'),
+            'type'  => 'text',
+            'placeholder' => 'https://example.com/video-mobile.mp4',
+            'description' => esc_html__('Enter the URL of the video to be displayed on mobile. If left empty, no video will display.', 'bricks'),
         ];
 
         $this->controls['load_trigger'] = [
@@ -32,22 +41,38 @@ class Custom_Video_Element extends \Bricks\Element
                 'interaction'  => esc_html__('User Interaction', 'bricks'),
             ],
         ];
+
+        $this->controls['breakpoint'] = [
+            'tab'   => 'responsive',
+            'label' => esc_html__('Mobile Breakpoint', 'bricks'),
+            'type'  => 'number',
+            'placeholder' => '768',
+            'description' => esc_html__('Viewport width in pixels where mobile view displays.', 'bricks'),
+        ];
     }
 
     public function render()
     {
         $settings = $this->settings;
 
-        if (empty($settings['video_url'])) return;
+        if (empty($settings['video_url_desktop']) && empty($settings['video_url_mobile'])) return;
 
-        $video_url = esc_url($settings['video_url']);
+        $video_url_desktop = esc_url($settings['video_url_desktop'] ?? '');
+        $video_url_mobile = esc_url($settings['video_url_mobile'] ?? '');
         $video_trigger = $settings['load_trigger'] ?? 'load';
+        $video_breakpoint = intval($settings['breakpoint'] ?? 768);
 
-        // Set the video URL as a data attribute for lazy loading
-        $this->set_attribute('_root', 'data-src', $video_url);
+        // Set the video URLs as data attributes for lazy loading
+        if (! empty($video_url_desktop)) {
+            $this->set_attribute('_root', 'data-src-desktop', $video_url_desktop);
+        }
+
+        if (! empty($video_url_mobile)) {
+            $this->set_attribute('_root', 'data-src-mobile', $video_url_mobile);
+        }
+
         $this->set_attribute('_root', 'data-trigger', $video_trigger);
-
-        // Background-video default attributes
+        $this->set_attribute('_root', 'data-breakpoint', $video_breakpoint);
         $this->set_attribute('_root', 'autoplay');
         $this->set_attribute('_root', 'muted');
         $this->set_attribute('_root', 'loop');
