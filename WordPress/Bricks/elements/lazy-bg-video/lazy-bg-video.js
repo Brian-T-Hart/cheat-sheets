@@ -12,6 +12,7 @@
     // Check if any videos should be loaded on user interaction
     const interactionTriggeredVideos = document.querySelectorAll('.brxe-lazy-bg-video[data-trigger="interaction"]');
     if (interactionTriggeredVideos.length > 0) {
+        const triggerEvents = ['pointerdown', 'pointermove', 'keydown', 'scroll'];
 
         function load_videos_on_interaction() {
             // Prevent multiple calls
@@ -19,17 +20,20 @@
             userInteracted = true;
 
             // Remove all listeners after firing
-            document.documentElement.removeEventListener('mouseenter', load_videos_on_interaction);
-            document.documentElement.removeEventListener('keydown', load_videos_on_interaction);
-            document.documentElement.removeEventListener('touchstart', load_videos_on_interaction, { passive: true });
+            triggerEvents.forEach(event => {
+                document.removeEventListener(event, load_videos_on_interaction);
+            });
 
             load_lazy_videos(interactionTriggeredVideos);
         }
 
         // Set up event listeners for user interactions to load videos
-        document.documentElement.addEventListener('mouseenter', load_videos_on_interaction);
-        document.documentElement.addEventListener('keydown', load_videos_on_interaction);
-        document.documentElement.addEventListener('touchstart', load_videos_on_interaction, { passive: true });
+        triggerEvents.forEach(event => {
+            document.addEventListener(event, load_videos_on_interaction, {
+                once: true,
+                passive: event !== 'keydown'
+            });
+        });
     }
 
     // Helper function to create source element based on video URL
