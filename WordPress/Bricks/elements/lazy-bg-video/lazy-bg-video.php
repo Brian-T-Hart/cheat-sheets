@@ -32,6 +32,14 @@ class Custom_Video_Element extends \Bricks\Element
             'description' => esc_html__('Enter the URL of the video to be displayed on mobile. If left empty, no video will display.', 'bricks'),
         ];
 
+        $this->controls['poster_image'] = [
+            'tab'   => 'content',
+            'label' => esc_html__('Poster Image URL', 'bricks'),
+            'type'  => 'text',
+            'placeholder' => 'https://example.com/poster.jpg',
+            'description' => esc_html__('Enter the URL of the poster image to be displayed before the video loads.', 'bricks'),
+        ];
+
         $this->controls['load_trigger'] = [
             'tab'   => 'content',
             'label' => esc_html__('Load Trigger', 'bricks'),
@@ -59,6 +67,7 @@ class Custom_Video_Element extends \Bricks\Element
 
         $video_url_desktop = esc_url($settings['video_url_desktop'] ?? '');
         $video_url_mobile = esc_url($settings['video_url_mobile'] ?? '');
+        $poster_image = esc_url($settings['poster_image'] ?? '');
         $video_trigger = $settings['load_trigger'] ?? 'load';
         $video_breakpoint = intval($settings['breakpoint'] ?? 768);
 
@@ -69,6 +78,10 @@ class Custom_Video_Element extends \Bricks\Element
 
         if (! empty($video_url_mobile)) {
             $this->set_attribute('_root', 'data-src-mobile', $video_url_mobile);
+        }
+
+        if (! empty($poster_image)) {
+            $this->set_attribute('_root', 'poster', $poster_image);
         }
 
         $this->set_attribute('_root', 'data-trigger', $video_trigger);
