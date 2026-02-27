@@ -1,35 +1,34 @@
 <script>
   (function () {
     window.dataLayer = window.dataLayer || [];
-    var interactionFired = false;
-    var interactionEvent = 'user_interaction';
+    var fired = false;
+    var eventName = 'user_interaction';
 
     // If thank you page, fire event immediately
-    if (window.location.pathname.includes('thank')) {
-      interactionFired = true;
-      window.dataLayer.push({ event: interactionEvent });
+    if (window.location.pathname.toLowerCase().includes('thank')) {
+      window.dataLayer.push({ event: eventName });
       return;
     }
 
-    function fireInteraction() {
-      if (!interactionFired) {
-        interactionFired = true;
-        window.dataLayer.push({ event: interactionEvent });
+    function fire(e) {
+      // only fire once and on non programmatic triggers
+      if (fired || (e && e.isTrusted === false)) return;
 
-        // Remove all listeners after firing
-        document.documentElement.removeEventListener('click', fireInteraction);
-        document.documentElement.removeEventListener('mouseenter', fireInteraction);
-        document.documentElement.removeEventListener('keydown', fireInteraction);
-        document.documentElement.removeEventListener('scroll', fireInteraction, { passive: true });
-        document.documentElement.removeEventListener('touchstart', fireInteraction, { passive: true });
-      }
-    }// fireInteraction
+      // push event to dataLayer
+      fired = true;
+      window.dataLayer.push({ event: eventName });
+
+      // Remove all listeners after event fires
+      removeEventListener('pointerdown', fire, true);
+      removeEventListener('pointermove', fire, true);
+      removeEventListener('keydown', fire, true);
+      removeEventListener('scroll', fire, true);
+    }
 
     // Set up event listeners
-    document.documentElement.addEventListener('click', fireInteraction);
-    document.documentElement.addEventListener('mouseenter', fireInteraction);
-    document.documentElement.addEventListener('keydown', fireInteraction);
-    document.documentElement.addEventListener('scroll', fireInteraction, { passive: true });
-    document.documentElement.addEventListener('touchstart', fireInteraction, { passive: true });
+    addEventListener('pointerdown', fire, { passive: true, capture: true });
+    addEventListener('pointermove', fire, { passive: true, capture: true });
+    addEventListener('keydown', fire, { capture: true });
+    addEventListener('scroll', fire, { passive: true, capture: true });
   })();
 </script>
