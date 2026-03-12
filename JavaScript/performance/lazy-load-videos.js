@@ -7,12 +7,11 @@
         if (customLazyVideosLoaded) return;
         customLazyVideosLoaded = true;
 
-        // Remove all listeners after firing
-        document.documentElement.removeEventListener('click', custom_load_lazy_videos);
-        document.documentElement.removeEventListener('mouseenter', custom_load_lazy_videos);
-        document.documentElement.removeEventListener('keydown', custom_load_lazy_videos);
-        document.documentElement.removeEventListener('scroll', custom_load_lazy_videos, { passive: true });
-        document.documentElement.removeEventListener('touchstart', custom_load_lazy_videos, { passive: true });
+        // Remove all listeners after event fires
+        removeEventListener('pointerdown', custom_load_lazy_videos, true);
+        removeEventListener('pointermove', custom_load_lazy_videos, true);
+        removeEventListener('keydown', custom_load_lazy_videos, true);
+        removeEventListener('scroll', custom_load_lazy_videos, true);
 
         // Lazy load videos
         const customLazyVideos = document.querySelectorAll(videoElementSelector);
@@ -52,9 +51,8 @@
     }
 
     // Set up event listeners
-    document.documentElement.addEventListener('click', custom_load_lazy_videos);
-    document.documentElement.addEventListener('mouseenter', custom_load_lazy_videos);
-    document.documentElement.addEventListener('keydown', custom_load_lazy_videos);
-    document.documentElement.addEventListener('scroll', custom_load_lazy_videos, { passive: true });
-    document.documentElement.addEventListener('touchstart', custom_load_lazy_videos, { passive: true });
+    addEventListener('pointerdown', custom_load_lazy_videos, { passive: true, capture: true });
+    addEventListener('pointermove', custom_load_lazy_videos, { passive: true, capture: true });
+    addEventListener('keydown', custom_load_lazy_videos, { capture: true });
+    addEventListener('scroll', custom_load_lazy_videos, { passive: true, capture: true });
 })();
