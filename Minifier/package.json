@@ -4,10 +4,13 @@
   "description": "JavaScript minifier tool",
   "main": "minify.js",
   "scripts": {
-    "minify": "node minify.js"
+    "dev": "node minify-js.js",
+    "prod": "cross-env NODE_ENV=production node minify-js.js"
   },
   "dependencies": {
-    "html-minifier-terser": "^7.2.0",
     "terser": "^5.30.0"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
   }
 }

@@ -106,7 +106,7 @@ class Custom_Video_Element extends \Bricks\Element
 
         wp_enqueue_script(
             'lazy-bg-video-script',
-            get_stylesheet_directory_uri() . '/elements/lazy-bg-video/lazy-bg-video.js',
+            get_stylesheet_directory_uri() . '/elements/lazy-bg-video/lazy-bg-video.min.js',
             array(),
             mt_rand()
         );
