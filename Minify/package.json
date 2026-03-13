@@ -1,0 +1,13 @@
+{
+  "name": "minify-js",
+  "version": "1.0.0",
+  "description": "JavaScript minifier tool",
+  "main": "minify.js",
+  "scripts": {
+    "minify": "node minify.js"
+  },
+  "dependencies": {
+    "html-minifier-terser": "^7.2.0",
+    "terser": "^5.30.0"
+  }
+}
