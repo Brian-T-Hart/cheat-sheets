@@ -31,7 +31,7 @@ async function minifyFile(filePath) {
   const code = fs.readFileSync(filePath, 'utf8');
 
   const result = await terser.minify(code, {
-    compress: true,
+    compress: isProduction ? {drop_console: ['log']} : true,
     mangle: true,
     format: {
       // Keep only license comments
