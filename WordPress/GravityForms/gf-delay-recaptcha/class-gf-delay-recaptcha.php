@@ -6,7 +6,6 @@
  */
 class GFDelayReCaptcha
 {
-    private static $src = '';
 
     /**
      * Initialize the class and hooks
@@ -23,12 +22,18 @@ class GFDelayReCaptcha
     {
         $form_id = $form['id'];
         $timestamp = time();
+        $recaptcha_src = '';
+
+        global $wp_scripts;
+        if (isset($wp_scripts->registered['gform_recaptcha'])) {
+            $recaptcha_src = $wp_scripts->registered['gform_recaptcha']->src;
+        }
 
         add_filter('script_loader_src', [__CLASS__, 'remove_recaptcha_src'], 10, 2);
 
         wp_enqueue_script(
             'gf-delay-recaptcha',
-            get_stylesheet_directory_uri() . '/functions/gf-delay-recaptcha/gf-delay-recaptcha.js?v=' . $timestamp,
+            get_stylesheet_directory_uri() . '/functions/gf-delay-recaptcha/gf-delay-recaptcha.min.js?v=' . $timestamp,
             array(),
             null,
             true
@@ -38,7 +43,7 @@ class GFDelayReCaptcha
         $localized_data = [
             'formId' => $form_id,
             'ajaxEnabled' => $is_ajax,
-            'recaptchaSrc' => self::$src,
+            'recaptchaSrc' => $recaptcha_src,
         ];
 
         wp_localize_script('gf-delay-recaptcha', 'GFDelayReCaptchaData', $localized_data);
@@ -52,8 +57,7 @@ class GFDelayReCaptcha
     public static function remove_recaptcha_src($src, $handle)
     {
         if ($handle === 'gform_recaptcha') {
-            self::$src = $src;
-            
+
             GFCommon::log_debug(__METHOD__ . "(): Script src = {self::$src}.");
 
             $src = "";
@@ -61,6 +65,6 @@ class GFDelayReCaptcha
 
         return $src;
     }
-}// GFDelayReCaptcha
+} // GFDelayReCaptcha
 
 GFDelayReCaptcha::init();
