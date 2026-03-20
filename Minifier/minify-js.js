@@ -5,10 +5,17 @@ const terser = require('terser');
 const isProduction = process.env.NODE_ENV === 'production';
 const force = process.argv.includes('--force');
 
-console.log(`🔧 Minifying JS files (${isProduction ? 'production' : 'development'} mode. Forced: ${force})`);
+// Get directory path from command line argument
+const inputDir = process.argv[2];
+if (!inputDir) {
+  console.error('Usage: node minify-js.js <directory-path>');
+  process.exit(1);
+}
 
-// JS source directory (one level up from minifier folder)
-const JS_DIR = path.join(__dirname, '../js');
+// Resolve to absolute path
+const JS_DIR = path.resolve(inputDir);
+
+console.log(`🔧 Minifying JS files in ${JS_DIR} (${isProduction ? 'production' : 'development'} mode. Forced: ${force})`);
 
 async function minifyFile(filePath) {
   const minPath = path.join(
