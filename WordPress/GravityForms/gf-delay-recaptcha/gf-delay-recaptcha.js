@@ -1,32 +1,41 @@
 (function () {
-    // Prevent multiple loads of the ReCAPTCHA script
-    if (typeof loadRecaptcha !== 'function') {
+     
+    // Load the ReCAPTCHA script
+    function loadRecaptcha() {
+        if (window.gfRecaptchaLoaded) return;
+        window.gfRecaptchaLoaded = true;
 
-        // Add ReCAPTCHA script to the page
-        function loadRecaptcha() {
-            if (window.gfRecaptchaLoaded) return;
-            window.gfRecaptchaLoaded = true;
+        let recaptchaScript = document.createElement('script');
+        recaptchaScript.src = getRecaptchaScriptSrc();
+        recaptchaScript.async = true;
+        recaptchaScript.defer = true;
 
-            var s = document.createElement('script');
-            s.src = getRecaptchaScriptSrc();
-            s.async = true;
-            s.defer = true;
-            document.body.appendChild(s);
-        }// loadRecaptcha
+        // Handle script loading errors
+        recaptchaScript.onerror = function() {
+            console.error('Failed to load reCAPTCHA script from:', recaptchaScript.src);
+        };
 
-        // Returns the ReCAPTCHA script source
-        function getRecaptchaScriptSrc() {
-            var recaptchaSrc = 'https://www.recaptcha.net/recaptcha/api.js?render=explicit';
+        document.body.appendChild(recaptchaScript);
+    }// loadRecaptcha
 
-            if (typeof GFDelayReCaptchaData !== 'undefined' && GFDelayReCaptchaData.recaptchaSrc) {
-                recaptchaSrc = GFDelayReCaptchaData.recaptchaSrc;
-            }
+    // Get the ReCAPTCHA script source from the global variable or use the default
+    function getRecaptchaScriptSrc() {
+        let recaptchaSrc = 'https://www.recaptcha.net/recaptcha/api.js?render=explicit';
 
-            return recaptchaSrc;
-        }// getRecaptchaScriptSrc
+        if (
+            typeof GFDelayReCaptchaData !== 'undefined' &&
+            GFDelayReCaptchaData.recaptchaSrc &&
+            typeof GFDelayReCaptchaData.recaptchaSrc === 'string' &&
+            GFDelayReCaptchaData.recaptchaSrc.trim() !== ''
+        ) {
+            recaptchaSrc = GFDelayReCaptchaData.recaptchaSrc.trim();
+        }
 
-        // Load when form is interacted with
-        document.addEventListener('focusin', loadRecaptcha, { once: true });
-        document.addEventListener('touchstart', loadRecaptcha, { once: true });
-    }
+        return recaptchaSrc;
+    }// getRecaptchaScriptSrc
+
+    // Load the ReCAPTCHA script when the form is interacted with
+    document.addEventListener('focusin', loadRecaptcha, { once: true });
+    document.addEventListener('pointerdown', loadRecaptcha, { once: true });
+
 })();
