@@ -1,6 +1,9 @@
 (function () {
      
-    // Load the ReCAPTCHA script
+    /**
+     * Loads the reCAPTCHA script when the user interacts with the form.
+     * @returns {void}
+     */
     function loadRecaptcha() {
         if (window.gfRecaptchaLoaded) return;
         window.gfRecaptchaLoaded = true;
@@ -18,7 +21,10 @@
         document.body.appendChild(recaptchaScript);
     }// loadRecaptcha
 
-    // Get the ReCAPTCHA script source from the global variable or use the default
+    /**
+     * Returns the reCAPTCHA script source URL.
+     * @returns {string} The URL of the reCAPTCHA script.
+     */
     function getRecaptchaScriptSrc() {
         let recaptchaSrc = 'https://www.recaptcha.net/recaptcha/api.js?render=explicit';
 
@@ -34,7 +40,6 @@
         return recaptchaSrc;
     }// getRecaptchaScriptSrc
 
-    // Load the ReCAPTCHA script when the form is interacted with
     document.addEventListener('focusin', loadRecaptcha, { once: true });
     document.addEventListener('pointerdown', loadRecaptcha, { once: true });
 
