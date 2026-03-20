@@ -32,9 +32,9 @@ class GFDelayReCaptcha
         add_filter('script_loader_src', [__CLASS__, 'remove_recaptcha_src'], 10, 2);
 
         // check if the minified version of the script exists, if not use the non-minified version
-        $script_path = get_stylesheet_directory() . '/functions/gf-delay-recaptcha/gf-delay-recaptcha.min.js';
-        if (!file_exists($script_path)) {
-            $script_path = get_stylesheet_directory() . '/functions/gf-delay-recaptcha/gf-delay-recaptcha.js';
+        $script_path = '/functions/gf-delay-recaptcha/gf-delay-recaptcha.min.js';
+        if (!file_exists(get_stylesheet_directory() . $script_path)) {
+            $script_path = '/functions/gf-delay-recaptcha/gf-delay-recaptcha.js';
         }
 
         wp_enqueue_script(
