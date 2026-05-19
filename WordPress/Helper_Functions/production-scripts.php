@@ -5,6 +5,8 @@ if (!class_exists('ProductionScripts')) {
     {
         private $site_url;
         private $is_production;
+        private $enable_header_scripts = true;
+        private $enable_footer_scripts = true;
         private $production_domain = 'production-site.com';
 
         public function __construct()
@@ -13,8 +15,13 @@ if (!class_exists('ProductionScripts')) {
             $this->is_production = strpos($this->site_url, $this->production_domain) !== false;
 
             if ($this->is_production) {
-                add_action('wp_head', [$this, 'add_production_scripts_to_head'], 15);
-                add_action('wp_footer', [$this, 'add_production_scripts_to_footer']);
+                if ($this->enable_header_scripts) {
+                    add_action('wp_head', [$this, 'add_production_scripts_to_head'], 15);
+                }
+
+                if ($this->enable_footer_scripts) {
+                    add_action('wp_footer', [$this, 'add_production_scripts_to_footer']);
+                }
             }
         }
 
@@ -24,11 +31,10 @@ if (!class_exists('ProductionScripts')) {
         public function add_production_scripts_to_head()
         {
             ob_start();
-            ?>
+?>
+            <!-- Add head scripts here -->
 
-            <!-- Add Production Header Scripts Here -->
-
-            <?php
+        <?php
             echo ob_get_clean();
         }
 
@@ -38,11 +44,11 @@ if (!class_exists('ProductionScripts')) {
         public function add_production_scripts_to_footer()
         {
             ob_start();
-            ?>
+        ?>
 
-            <!-- Add Production Footer Scripts Here -->
-             
-            <?php
+            <!-- Add footer scripts here -->
+
+<?php
             echo ob_get_clean();
         }
     }
