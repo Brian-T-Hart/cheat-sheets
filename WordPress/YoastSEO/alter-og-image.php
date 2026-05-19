@@ -5,10 +5,10 @@
  * Requires Yoast SEO plugin
  */
 function alter_existing_opengraph_image($image) {
+    $image_id = '';
     $excluded_post_types = array('post');
 
-    if (!is_singular($excluded_post_types)) {
-        $image_id = 'xxxxx'; // Image ID
+    if (!is_singular($excluded_post_types) && !empty($image_id)) {
         $image_data = wp_get_attachment_image_src($image_id, 'full');
 
         if ($image_data) {
