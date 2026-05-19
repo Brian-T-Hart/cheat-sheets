@@ -1,12 +1,10 @@
 <?php
 
-// /wp-admin/admin-ajax.php?action=get_list_of_plugins_needing_updates
-add_action("wp_ajax_get_list_of_plugins_needing_updates", "get_list_of_plugins_needing_updates");
-
 /**
- * Get list of plugins needing updates
+ * Gets a list of plugins that have available updates
+ * Accessible via AJAX at /wp-admin/admin-ajax.php?action=get_plugin_update_list
  */
-function get_list_of_plugins_needing_updates()
+function get_plugin_update_list()
 {
 
   if (!current_user_can('manage_options')) {
@@ -33,3 +31,4 @@ function get_list_of_plugins_needing_updates()
   echo $plugin_info;
   wp_die();
 }
+add_action("wp_ajax_get_plugin_update_list", "get_plugin_update_list");
