@@ -1,37 +1,35 @@
 /**
  * Try to execute a function, and if it fails, try again after a delay.
  * Use exponential backoff to increase the delay between attempts.
- * @param {Function} attempting 
+ * @param {Function} fn
  * @param {Number} attempts 
  * @param {Number} delay 
  * @returns 
  */
-function try_try_again(attempting, attempts = 3, delay = 250) {
-    if (attempts > 0) {
-        console.log(`Remaining attempts: ${attempts}`);
-        console.log(`Current delay: ${delay}ms`);
-        attempts--;
-        delay = delay * 2; // Exponential backoff
+async function try_try_again(fn, attempts = 5, delay = 500) {
+    let currentDelay = delay;
+    let lastError;
 
-        if (attempting()) {
-            console.log('Success!');
-            return;
+    for (let attempt = 0; attempt <= attempts; attempt++) {
+        try {
+            // Promise.resolve lets this support both sync and async functions.
+            return await Promise.resolve(fn());
+        } catch (error) {
+            lastError = error;
+            const attemptsLeft = attempts - attempt;
+
+            if (attemptsLeft === 0) {
+                break;
+            }
+
+            console.log(
+                `Error occurred: ${error.message}. Retrying in ${currentDelay}ms... (${attemptsLeft} attempts left)`
+            );
+
+            await new Promise((resolve) => setTimeout(resolve, currentDelay));
+            currentDelay *= 2;
         }
-        
-        else {
-            setTimeout(() => {
-                console.log('Delay in setTimeout: ' + delay + 'ms');
-                try_try_again(attempting, attempts, delay);
-            }, delay);
-        }
-    } else {
-        console.log('No more attempts');
     }
-}
 
-function do_something() {
-    console.log('Doing something...');
-    return false;
+    throw lastError;
 }
-
-try_try_again(do_something);
